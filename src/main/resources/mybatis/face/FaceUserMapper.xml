@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ftysoft.project.face.user.mapper.FaceUserMapper">
+    
+    <resultMap type="FaceUser" id="FaceUserResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="faceGroup"    column="face_group"    />
+        <result property="faceImg"    column="face_img"    />
+        <result property="faceFeature"    column="face_feature"    />
+        <result property="tag"    column="tag"    />
+        <result property="workNum"    column="work_num"    />
+    </resultMap>
+
+    <sql id="selectFaceUserVo">
+        select id, user_id, face_group, face_img, face_feature, tag, work_num from face_user
+    </sql>
+
+    <select id="selectFaceUserList" parameterType="FaceUser" resultMap="FaceUserResult">
+        <include refid="selectFaceUserVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="faceGroup != null  and faceGroup != ''"> and face_group = #{faceGroup}</if>
+            <if test="tag != null  and tag != ''"> and tag = #{tag}</if>
+            <if test="workNum != null  and workNum != ''"> and work_num = #{workNum}</if>
+        </where>
+    </select>
+    
+    <select id="selectFaceUserById" parameterType="Long" resultMap="FaceUserResult">
+        <include refid="selectFaceUserVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertFaceUser" parameterType="FaceUser" useGeneratedKeys="true" keyProperty="id">
+        insert into face_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null ">user_id,</if>
+            <if test="faceGroup != null  and faceGroup != ''">face_group,</if>
+            <if test="faceImg != null ">face_img,</if>
+            <if test="faceFeature != null  and faceFeature != ''">face_feature,</if>
+            <if test="tag != null  and tag != ''">tag,</if>
+            <if test="workNum != null  and workNum != ''">work_num,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null ">#{userId},</if>
+            <if test="faceGroup != null  and faceGroup != ''">#{faceGroup},</if>
+            <if test="faceImg != null ">#{faceImg},</if>
+            <if test="faceFeature != null  and faceFeature != ''">#{faceFeature},</if>
+            <if test="tag != null  and tag != ''">#{tag},</if>
+            <if test="workNum != null  and workNum != ''">#{workNum},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFaceUser" parameterType="FaceUser">
+        update face_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="faceGroup != null  and faceGroup != ''">face_group = #{faceGroup},</if>
+            <if test="faceImg != null ">face_img = #{faceImg},</if>
+            <if test="faceFeature != null  and faceFeature != ''">face_feature = #{faceFeature},</if>
+            <if test="tag != null  and tag != ''">tag = #{tag},</if>
+            <if test="workNum != null  and workNum != ''">work_num = #{workNum},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFaceUserById" parameterType="Long">
+        delete from face_user where id = #{id}
+    </delete>
+
+    <delete id="deleteFaceUserByIds" parameterType="String">
+        delete from face_user where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

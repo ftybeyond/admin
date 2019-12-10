@@ -1,0 +1,2 @@
+Application Version: ${ftysoft.version}
+Spring Boot Version: ${spring-boot.version}

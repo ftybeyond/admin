@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ftysoft.project.face.group.mapper.FaceGroupMapper">
+    
+    <resultMap type="FaceGroup" id="FaceGroupResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectFaceGroupVo">
+        select id, name, remark from face_group
+    </sql>
+
+    <select id="selectFaceGroupList" parameterType="FaceGroup" resultMap="FaceGroupResult">
+        <include refid="selectFaceGroupVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectFaceGroupById" parameterType="Long" resultMap="FaceGroupResult">
+        <include refid="selectFaceGroupVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertFaceGroup" parameterType="FaceGroup" useGeneratedKeys="true" keyProperty="id">
+        insert into face_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">name,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFaceGroup" parameterType="FaceGroup">
+        update face_group
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFaceGroupById" parameterType="Long">
+        delete from face_group where id = #{id}
+    </delete>
+
+    <delete id="deleteFaceGroupByIds" parameterType="String">
+        delete from face_group where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
